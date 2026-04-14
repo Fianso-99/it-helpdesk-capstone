@@ -2,6 +2,7 @@ package com.helpdesk.backend.service;
 
 import com.helpdesk.backend.entity.Ticket;
 import com.helpdesk.backend.entity.User;
+import com.helpdesk.backend.exception.ResourceNotFoundException;
 import com.helpdesk.backend.repository.TicketRepository;
 import com.helpdesk.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class TicketService {
     // Get ticket by ID
     public Ticket getTicketById(Long id) {
         return ticketRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ticket not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket", id));
     }
 
     // Get tickets by status
@@ -49,7 +50,7 @@ public class TicketService {
     @Transactional
     public Ticket createTicket(Ticket ticket, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId));
         ticket.setSubmittedBy(user);
         ticket.setStatus(Ticket.Status.OPEN);
         ticket.setCreatedAt(LocalDateTime.now());

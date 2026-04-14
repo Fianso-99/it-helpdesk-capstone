@@ -1,6 +1,7 @@
 package com.helpdesk.backend.service;
 
 import com.helpdesk.backend.entity.User;
+import com.helpdesk.backend.exception.ResourceNotFoundException;
 import com.helpdesk.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,23 +24,22 @@ public class UserService {
     // Get user by ID
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User", id));
     }
 
     // Get user by email
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "User not found with email: " + email));
     }
 
     // Register new user
     @Transactional
     public User registerUser(User user) {
-        // Check if email already exists
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email already in use: " + user.getEmail());
         }
-        // Hash the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
