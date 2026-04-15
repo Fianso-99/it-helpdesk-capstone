@@ -1,5 +1,7 @@
 package com.helpdesk.backend.controller;
 
+import com.helpdesk.backend.dto.AuthResponseDTO;
+import com.helpdesk.backend.dto.UserDTO;
 import com.helpdesk.backend.entity.User;
 import com.helpdesk.backend.security.JwtUtil;
 import com.helpdesk.backend.service.UserService;
@@ -12,7 +14,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class AuthController {
 
     private final UserService userService;
@@ -24,8 +26,7 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
             User savedUser = userService.registerUser(user);
-            savedUser.setPassword(null);
-            return ResponseEntity.ok(savedUser);
+            return ResponseEntity.ok(UserDTO.fromUser(savedUser));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -49,13 +50,15 @@ public class AuthController {
                     user.getRole().name()
             );
 
-            return ResponseEntity.ok(Map.of(
-                    "token", token,
-                    "userId", user.getId(),
-                    "name", user.getName(),
-                    "email", user.getEmail(),
-                    "role", user.getRole().name()
-            ));
+            AuthResponseDTO response = AuthResponseDTO.builder()
+                    .token(token)
+                    .userId(user.getId())
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .role(user.getRole().name())
+                    .build();
+
+            return ResponseEntity.ok(response);
 
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
