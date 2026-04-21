@@ -188,8 +188,9 @@ const TicketDetail = () => {
                                         <div key={comment.id}
                                             className="border-start border-primary border-3 ps-3 mb-4">
                                             <div className="d-flex align-items-center gap-2 mb-1">
+                                                {/* ✅ Updated to use authorName from DTO */}
                                                 <span className="fw-bold">
-                                                    {comment.author?.name}
+                                                    {comment.authorName}
                                                 </span>
                                                 <span className="text-muted"
                                                     style={{ fontSize: 12 }}>
@@ -243,8 +244,9 @@ const TicketDetail = () => {
                                         <i className="bi bi-person"></i>
                                         Requester
                                     </div>
+                                    {/* ✅ Updated to use submittedByName from DTO */}
                                     <div className="fw-semibold">
-                                        {ticket.submittedBy?.name}
+                                        {ticket.submittedByName}
                                     </div>
                                 </div>
 
@@ -254,8 +256,9 @@ const TicketDetail = () => {
                                         <i className="bi bi-envelope"></i>
                                         Email
                                     </div>
+                                    {/* ✅ Updated to use submittedByEmail from DTO */}
                                     <div className="fw-semibold">
-                                        {ticket.submittedBy?.email}
+                                        {ticket.submittedByEmail}
                                     </div>
                                 </div>
 
