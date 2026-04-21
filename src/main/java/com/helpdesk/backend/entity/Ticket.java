@@ -3,6 +3,7 @@ package com.helpdesk.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "tickets")
@@ -43,6 +44,12 @@ public class Ticket {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    // Delete comments automatically when ticket is deleted
+    @OneToMany(mappedBy = "ticket",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Comment> comments;
 
     public enum Category {
         HARDWARE,
