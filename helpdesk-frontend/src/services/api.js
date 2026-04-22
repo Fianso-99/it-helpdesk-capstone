@@ -28,6 +28,9 @@ export const getTicketsByUser = (userId) => api.get(`/tickets/user/${userId}`)
 export const createTicket = (ticket, userId) => api.post(`/tickets/user/${userId}`, ticket)
 export const updateTicket = (id, ticket) => api.put(`/tickets/${id}`, ticket)
 export const deleteTicket = (id) => api.delete(`/tickets/${id}`)
+
+// Dashboard Stats
 export const getDashboardStats = () => api.get('/tickets/dashboard/stats')
+export const getUserDashboardStats = (userId) => api.get(`/tickets/dashboard/stats/user/${userId}`)
 
 export default api

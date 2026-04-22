@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '../components/Layout'
-import { getDashboardStats, getAllTickets, getTicketsByUser } from '../services/api'
+import { getDashboardStats, getUserDashboardStats, getAllTickets, getTicketsByUser } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 
 const StatCard = ({ title, value, icon, color, bg }) => (
@@ -48,7 +48,13 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const statsRes = await getDashboardStats()
+                // ADMIN sees all stats, USER sees their own stats
+                let statsRes
+                if (user?.role === 'ADMIN') {
+                    statsRes = await getDashboardStats()
+                } else {
+                    statsRes = await getUserDashboardStats(user?.userId)
+                }
                 setStats(statsRes.data)
 
                 // ADMIN sees all tickets, USER sees only their own
@@ -93,7 +99,7 @@ const Dashboard = () => {
                 {/* Stat Cards */}
                 <div className="row g-3 mb-4">
                     <StatCard
-                        title="Total Tickets"
+                        title={user?.role === 'ADMIN' ? 'Total Tickets' : 'My Tickets'}
                         value={stats.total}
                         icon="bi-graph-up"
                         color="#0d6efd"
@@ -169,7 +175,7 @@ const Dashboard = () => {
                                             {ticket.category}
                                             {user?.role === 'ADMIN' && (
                                                 <span className="ms-2">
-                                                    • {ticket.submittedBy?.name}
+                                                    • {ticket.submittedByName}
                                                 </span>
                                             )}
                                         </div>
