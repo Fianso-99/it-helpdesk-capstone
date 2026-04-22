@@ -8,7 +8,7 @@ const Sidebar = () => {
 
     const handleLogout = () => {
         logout()
-        navigate('/login')
+        navigate('/', { replace: true })
     }
 
     const isActive = (path) => location.pathname === path

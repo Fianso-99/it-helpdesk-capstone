@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
@@ -7,18 +8,19 @@ import Tickets from './pages/Tickets'
 import CreateTicket from './pages/CreateTicket'
 import TicketDetail from './pages/TicketDetail'
 
-// Protected Route Component
 const ProtectedRoute = ({ children }) => {
     const { user } = useAuth()
-    return user ? children : <Navigate to="/login" />
+    return user ? children : <Navigate to="/" replace />
 }
 
-// App Routes
 const AppRoutes = () => {
     const { user } = useAuth()
 
     return (
         <Routes>
+            {/* Home Page - always accessible */}
+            <Route path="/" element={<Home />} />
+
             {/* Public Routes */}
             <Route path="/login" element={
                 user ? <Navigate to="/dashboard" /> : <Login />
@@ -41,9 +43,8 @@ const AppRoutes = () => {
                 <ProtectedRoute><TicketDetail /></ProtectedRoute>
             } />
 
-            {/* Default redirect */}
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-            <Route path="*" element={<Navigate to="/dashboard" />} />
+            {/* 404 */}
+            <Route path="*" element={<Navigate to="/" />} />
         </Routes>
     )
 }
