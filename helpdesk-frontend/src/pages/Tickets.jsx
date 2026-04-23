@@ -188,7 +188,8 @@ const Tickets = () => {
                                             </span>
                                             <span className="text-muted">
                                                 <i className="bi bi-person me-1"></i>
-                                                {ticket.submittedBy?.name}
+                                                {/* ✅ Updated to use DTO field */}
+                                                {ticket.submittedByName}
                                             </span>
                                         </div>
                                     </div>
@@ -202,8 +203,9 @@ const Tickets = () => {
                                                 onClick={() => navigate(`/tickets/${ticket.id}`)}>
                                                 <i className="bi bi-eye"></i>
                                             </button>
+                                            {/* ✅ Updated to use DTO field for ownership check */}
                                             {(user?.role === 'ADMIN' ||
-                                                ticket.submittedBy?.id === user?.userId) && (
+                                                ticket.submittedByEmail === user?.email) && (
                                                 <button
                                                     className="btn btn-outline-danger btn-sm"
                                                     onClick={() => handleDelete(ticket.id)}>
